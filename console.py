@@ -37,7 +37,6 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
-
         Usage: <class name>.<command>([<id> [<*args> or <**kwargs>]])
         (Brackets denote optional fields in usage example.)
         """
@@ -73,7 +72,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -113,38 +112,38 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-   def do_create(self, arg):
-       """Create a new instance of a class."""
-       if not arg:
-           print("** class name missing **")
-           return
-       args = arg.split()
-       class_name = args[0]
-       if class_name not in self.classes:
-           print("** class doesn't exist **")
-           return
-       params = {}
-       for param in args[1:]:
-           try:
-               key, value = param.split("=")
-               if value.startswith('"') and value.endswith('"'):
-                   # Handle string values
-                   value = value[1:-1].replace("_", " ").replace('\\"', '"')
-               elif "." in value:
-                   # Handle float values
-                   value = float(value)
-               else:
-                   # Handle integer values
-                   value = int(value)
-                   params[key] = value
-           except ValueError:
-               # Skip parameters that don't match the expected format
-               pass
-           instance = self.classes[class_name](**params)
-           self.storage.new(instance)
-           self.storage.save()
-           print(instance.id)
- 
+    def do_create(self, arg):
+        """Create a new instance of a class."""
+        if not arg:
+            print("** class name missing **")
+            return
+        args = arg.split()
+        class_name = args[0]
+        if class_name not in self.classes:
+            print("** class doesn't exist **")
+            return
+        params = {}
+        for param in args[1:]:
+            try:
+                key, value = param.split("=")
+                if value.startswith('"') and value.endswith('"'):
+                    # Handle string values
+                    value = value[1:-1].replace("_", " ").replace('\\"', '"')
+                elif "." in value:
+                    # Handle float values
+                    value = float(value)
+                else:
+                    # Handle integer values
+                    value = int(value)
+                    params[key] = value
+            except ValueError:
+                # Skip parameters that don't match the expected format
+                pass
+            instance = self.classes[class_name](**params)
+            self.storage.new(instance)
+            self.storage.save()
+            print(instance.id)
+
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
@@ -338,6 +337,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
