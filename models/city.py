@@ -1,13 +1,13 @@
 #!/usr/bin/python3
-"""This module defines a class City"""
-from models.base_model import BaseModel
-from models.place import Place
-from sqlalchemy import Column, String, ForeignKey
+""" City module for the HBNB project """
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
 
-class City(BaseModel):
-    """This class defines a city by various attributes"""
-    state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+class City(BaseModel, Base):
+    """ City class to store city information """
+    __tablename__ = 'cities'
     name = Column(String(128), nullable=False)
-    places = relationship('Place', cascade='all, delete', backref='cities')
+    state_id = Column(String(60), nullable=False, ForeignKey('states.id'))
+    places = relationship("Place", backref="cities", cascade="all, delete")
