@@ -75,7 +75,11 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
+<<<<<<< HEAD
                     if pline[0] is '{' and pline[-1] is '}'\
+=======
+                    if pline[0] == '{' and pline[-1] == '}'\
+>>>>>>> ali_dev
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -123,12 +127,16 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """Create a new instance of a class."""
+<<<<<<< HEAD
 
+=======
+>>>>>>> ali_dev
         if not arg:
             print("** class name missing **")
             return
         args = arg.split()
         class_name = args[0]
+<<<<<<< HEAD
         if class_name not in self.classes:
             print("** class doesn't exist **")
             return
@@ -137,6 +145,17 @@ class HBNBCommand(cmd.Cmd):
             try:
                 key, value = param.split("=")
                 if value.startswith('"') and value.endswith('"'):
+=======
+        if class_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
+        instance = HBNBCommand.classes[class_name]()
+        for param in args[1:]:
+            try:
+                key, value = param.split("=")
+                if value.startswith('"') and value.endswith('"') \
+                and len(value) > 1:
+>>>>>>> ali_dev
                     # Handle string values
                     value = value[1:-1].replace("_", " ").replace('\\"', '"')
                 elif "." in value:
@@ -145,6 +164,7 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     # Handle integer values
                     value = int(value)
+<<<<<<< HEAD
                     params[key] = value
             except ValueError:
                 # Skip parameters that don't match the expected format
@@ -153,6 +173,15 @@ class HBNBCommand(cmd.Cmd):
             self.storage.new(instance)
             self.storage.save()
             print(instance.id)
+=======
+                setattr(instance, key, value)
+            except ValueError:
+            # Skip parameters that don't match the expected format
+                continue
+        storage.save()
+        print(instance.id)
+        storage.save()
+>>>>>>> ali_dev
 
     def help_create(self):
         """ Help information for the create method """
@@ -310,7 +339,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '\"':  # check for quoted arg
+            if args and args[0] == '\"':  # check for quoted arg
                 second_quote = args.find('\"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1:]
@@ -318,10 +347,10 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(' ')
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not ' ':
+            if not att_name and args[0] != ' ':
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] is '\"':
+            if args[2] and args[2][0] == '\"':
                 att_val = args[2][1:args[2].find('\"', 1)]
 
             # if att_val was not quoted arg
