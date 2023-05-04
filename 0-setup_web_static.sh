@@ -2,9 +2,9 @@
 # A Bash script that sets up your web servers for the deployment of web_static
 
 # Install nginx if it is not already installed
-if ! which nginx > /dev/null; then
-	sudo apt-get update
-	sudo apt-get -y install nginx
+if ! command -v nginx > /dev/null; then
+   sudo apt-get update
+   sudo apt-get -y install nginx
 fi
 
 # Create necessary directories if they don't exist
