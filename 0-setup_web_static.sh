@@ -1,25 +1,38 @@
 #!/usr/bin/env bash
-# A Bash script that sets up your web servers for the deployment of web_static
+#Bash script that sets up your web servers for the
+#deployment of web_static
+apt-get update
+apt-get install -y nginx
 
-# Install nginx if it is not already installed
-if ! command -v nginx > /dev/null; then
-   sudo apt-get update
-   sudo apt-get -y install nginx
-fi
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
+echo "Holberton School" > /data/web_static/releases/test/index.html
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-# Create necessary directories if they don't exist
-sudo mkdir -p /data/web_static/releases/test/
-sudo mkdir -p /data/web_static/shared/
-sudo chown -R ubuntu:ubuntu /data/
+chown -R ubuntu /data/
+chgrp -R ubuntu /data/
 
-# Create fake HTML file
-echo "<html><head><title>Test Page</title></head><body>This is a test page.</body></html>" | sudo tee /data/web_static/releases/test/index.html > /dev/null
+echo "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By $HOSTNAME;
+    root   /var/www/html;
+    index  index.html index.htm;
 
-# Create symbolic link
-sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
+    }
 
-# Update nginx configuration
-sudo sed -i '/listen 80 default_server;/a location /hbnb_static {\nalias /data/web_static/current/;\n}' /etc/nginx/sites-available/default
+    location /redirect_me {
+        rewrite ^/redirect_me https://www.github.com permanent;
+    }
 
-# Restart nginx
-sudo service nginx restart
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
+
+service nginx restart
