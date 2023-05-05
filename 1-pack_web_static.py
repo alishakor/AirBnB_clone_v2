@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 def do_pack():
-    """Archive the contents of web_static folder"""
+    """Archive all the contents of web_static folder"""
     # Create the versions directory if it doesn't exist
     local("mkdir -p versions")
 
@@ -22,10 +22,10 @@ def do_pack():
     archive_path = "versions/{}".format(archive_name)
 
     # Create the archive
-    result = local("tar -cvzf {} web_static".format(archive_path))
+    arch = local("tar -cvzf {} web_static".format(archive_path))
 
     # Return the path of the archive if it was created successfully
-    if result.succeeded:
+    if arch.succeeded:
         return archive_path
     else:
         return None
