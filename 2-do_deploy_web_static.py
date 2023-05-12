@@ -21,8 +21,8 @@ def do_deploy(archive_path):
         folders = '/data/web_static/releases/'
         put(archive_path, '/tmp/')
         sudo("mkdir -p folders{}".format(archive_basename))
-        sudo("tar -xzf /tmp/{} -C folders{}".format(
-            archive_filename, archive_basename))
+        sudo("tar -xzf /tmp/{0}.tgz -C folders{0}".format(
+            archive_basename))
         sudo("rm /tmp/{}".format(archive_filename))
         sudo("mv folders{0}/web_static/* folders{0}".format(archive_basename))
         sudo("rm -rf folders{}/web_static".format(archive_basename))
