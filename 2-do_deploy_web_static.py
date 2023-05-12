@@ -20,14 +20,14 @@ def do_deploy(archive_path):
         archive_basename = archive_filename.split(".")[0]
         folders = '/data/web_static/releases/'
         put(archive_path, '/tmp/')
-        sudo("mkdir -p folders{}/".format(archive_basename))
-        sudo("tar -xzf /tmp/{} -C folders{}/".format(
+        sudo("mkdir -p folders{}".format(archive_basename))
+        sudo("tar -xzf /tmp/{} -C folders{}".format(
             archive_filename, archive_basename))
         sudo("rm /tmp/{}".format(archive_filename))
-        sudo("mv folders{0}/web_static/* folders{0}/".format(archive_basename))
+        sudo("mv folders{0}/web_static/* folders{0}".format(archive_basename))
         sudo("rm -rf folders{}/web_static".format(archive_basename))
         sudo("rm -rf /data/web_static/current")
-        sudo("ln -s folders{}/ /data/web_static/current".format(
+        sudo("ln -s folders{} /data/web_static/current".format(
             archive_basename))
         return True
     except Exception as e:
