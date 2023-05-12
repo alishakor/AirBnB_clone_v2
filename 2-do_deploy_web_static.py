@@ -4,7 +4,7 @@ Write a Fabric script (based on the file 1-pack_web_static.py) that
 distributes an archive to your web servers, using the function do_deploy
 """
 import os
-from fabric.api import env, put, run, sudo
+from fabric.api import env, put, run
 from os.path import exists
 
 env.user = 'ubuntu'
@@ -13,22 +13,21 @@ env.hosts = ['100.25.163.126', '52.3.240.73']
 
 def do_deploy(archive_path):
     """Distribute an archive to the web servers"""
-    if not exists(archive_path):
+    if not os.path.exists(archive_path):
         return False
     try:
-        archive_filename = archive_path.split("/")[-1]
-        archive_basename = archive_filename.split(".")[0]
-        folders = '/data/web_static/releases/'
         put(archive_path, '/tmp/')
-        sudo("mkdir -p folders{}".format(archive_basename))
-        sudo("tar -xzf /tmp/{0}.tgz -C folders{0}".format(
-            archive_basename))
-        sudo("rm /tmp/{}".format(archive_filename))
-        sudo("mv folders{0}/web_static/* folders{0}".format(archive_basename))
-        sudo("rm -rf folders{}/web_static".format(archive_basename))
-        sudo("rm -rf /data/web_static/current")
-        sudo("ln -s folders{} /data/web_static/current".format(
-            archive_basename))
+        split_slash = archive_path.split("/")[-1]
+        remove_tgz = split_slash.split(".")[0]
+        directory = '/data/web_static/releases/'
+        run('mkdir -p {}{}'.format(directory, remove_tgz))
+        run('tar -xzf /tmp/{0}.tgz -C {1}{0}'.format(remove_tgz, directory))
+        run('rm /tmp/{}.tgz'.format(remove_tgz))
+        run('mv {0}{1}/web_static/* {0}{1}'.format(directory, remove_tgz))
+        run('rm -rf {}{}/web_static'.format(directory, remove_tgz))
+        run('rm -rf /data/web_static/current')
+        run('ln -s {}{}\
+                /data/web_static/current'.format(directory, remove_tgz))
         return True
     except Exception as e:
         return False
