@@ -12,11 +12,13 @@ def webapp_start():
 
     return "{}".format("Hello HBNB!")
 
+
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
     """a function that returns a string"""
 
     return "{}".format("HBNB")
+
 
 @app.route('/c/<text>', strict_slashes=False)
 def Statement(text):

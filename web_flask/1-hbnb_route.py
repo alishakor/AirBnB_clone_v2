@@ -12,7 +12,8 @@ def webapp_start():
 
     return "{}".format("Hello HBNB!")
 
-@app.route('/hbnb',strict_slashes=False)
+
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
     """a function that returns a string"""
 
