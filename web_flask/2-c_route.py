@@ -24,6 +24,9 @@ def hbnb():
 def Statement(text):
     """a function that returns a string"""
 
+    if "_" in text:
+        updated_text = text.replace("_", " ")
+        return "C {}".format(escape(updated_text))
     return "C {}".format(escape(text))
 
 
