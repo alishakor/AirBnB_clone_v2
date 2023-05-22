@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """This module defines a class to manage database storage for hbnb clone"""
-from os import getenv
+from os import environ, getenv
 from sqlalchemy import create_engine, MetaData
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.city import City
@@ -33,14 +33,15 @@ class DBStorage:
         """query on the current database session"""
         objs_dict = {}
         if cls:
-            objs = self.__session.query(eval(cls)).all()
+            objs = self.__session.query(cls)
             for obj in objs:
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
                 objs_dict[key] = obj
         else:
-            classes = [City, State, User, Place, Amenity, Review]
-            for cls in classes:
-                objs = self.__session.query(cls).all()
+            #classes = [City, State, User, Place, Amenity, Review]
+            #for cls in classes:
+            for key, value in classes.items():
+                objs = self.__session.query(value)
                 for obj in objs:
                     key = "{}.{}".format(obj.__class__.__name__, obj.id)
                     objs_dict[key] = obj
@@ -66,3 +67,7 @@ class DBStorage:
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """calls the remove method on the session"""
+        self.__session.remove()

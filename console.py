@@ -10,6 +10,22 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import re
+import os
+
+
+def tokenize(args: str) -> list:
+    """Tokenizer.
+
+    Args:
+        args (str): console input
+
+    Returns:
+        list: list of tokens
+    """
+
+    tokens = args.split()
+    return tokens
 
 
 class HBNBCommand(cmd.Cmd):
@@ -72,15 +88,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-<<<<<<< HEAD
                     if pline[0] == '{' and pline[-1] == '}'\
-=======
-<<<<<<< HEAD
-                    if pline[0] is '{' and pline[-1] is '}'\
-=======
-                    if pline[0] == '{' and pline[-1] == '}'\
->>>>>>> ali_dev
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -94,15 +102,8 @@ class HBNBCommand(cmd.Cmd):
             return line
 
     def postcmd(self, stop, line):
-<<<<<<< HEAD
         """Prints if isatty is false"""
-<<<<<<< HEAD
-=======
 
-=======
-        """prints if isatty is false"""
->>>>>>> ali_dev
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
         if not sys.__stdin__.isatty():
             print('(hbnb) ', end='')
         return stop
@@ -128,50 +129,28 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, arg):
+    def do_create(self, args):
         """Create a new instance of a class."""
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> ali_dev
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
-        if not arg:
+        #tokenize the args fromthe console
+        tokens = tokenize(args)
+        if not args:
             print("** class name missing **")
             return
-        args = arg.split()
-        class_name = args[0]
-<<<<<<< HEAD
-        if class_name not in HBNBCommand.classes:
-=======
-<<<<<<< HEAD
-        if class_name not in self.classes:
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
-            print("** class doesn't exist **")
-            return
-        instance = HBNBCommand.classes[class_name]()
-        for param in args[1:]:
-            try:
-                from models.base_model import BaseModel
-                key, value = param.split("=")
-<<<<<<< HEAD
-                if value.startswith('"') and value.endswith('"') \
-                and len(value) > 1:
-=======
-                if value.startswith('"') and value.endswith('"'):
-=======
+        # Extracting the class name and all parameters
+        class_name = tokens[0]
+        params = tokens[1:]
+
+        # if class is not in class
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
         instance = HBNBCommand.classes[class_name]()
-        for param in args[1:]:
+        for param in params:
             try:
                 key, value = param.split("=")
                 if value.startswith('"') and value.endswith('"') \
                 and len(value) > 1:
->>>>>>> ali_dev
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
                     # Handle string values
                     value = value[1:-1].replace("_", " ").replace('\\"', '"')
                 elif "." in value:
@@ -180,32 +159,12 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     # Handle integer values
                     value = int(value)
-<<<<<<< HEAD
                 setattr(instance, key, value)
             except ValueError:
-=======
-<<<<<<< HEAD
-                    params[key] = value
-            except ValueError:
-                # Skip parameters that don't match the expected format
-                pass
-            instance = self.classes[class_name](**params)
-            self.storage.new(instance)
-            self.storage.save()
-            print(instance.id)
-=======
-                setattr(instance, key, value)
-            except ValueError:
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
-            # Skip parameters that don't match the expected format
-                continue
-        storage.save()
+                    continue
+        instance.save()
         print(instance.id)
         storage.save()
-<<<<<<< HEAD
-=======
->>>>>>> ali_dev
->>>>>>> d52fe0837c2abbafc2fe41bf2d1fc9eb57e83ea8
 
     def help_create(self):
         """ Help information for the create method """
@@ -287,11 +246,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all(self.classes[args]).items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all(None).items():
                 print_list.append(str(v))
 
         print(print_list)
